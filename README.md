@@ -52,7 +52,7 @@ Excess Return = Stock Return - SPY Return
 ## Hypothesis
 
  - H₀: The average post-event excess return is equal to zero.
--H₁: The average post-event excess return is greater than zero.
+ - H₁: The average post-event excess return is greater than zero.
 
 ## Tools Used
  - R
