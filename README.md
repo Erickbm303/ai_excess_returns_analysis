@@ -49,21 +49,21 @@ A t-test will be used to test whether post-event excess returns are statisticall
 ```text
 Excess Return = Stock Return - SPY Return
 ```
-Hypothesis
+## Hypothesis
 
-H₀: The average post-event excess return is equal to zero.
-H₁: The average post-event excess return is greater than zero.
+-H₀: The average post-event excess return is equal to zero.
+-H₁: The average post-event excess return is greater than zero.
 
-Tools Used
-R
-RStudio
-tidyquant
-dplyr
-ggplot2
-Yahoo Finance data
-Current Progress
-Created RStudio project
-Downloaded stock price data
-Generated adjusted price chart
-Confirmed that the data loads correctly
+## Tools Used
+-R
+-RStudio
+-tidyquant
+-dplyr
+-ggplot2
+-Yahoo Finance data
+## Current Progress
+-Created RStudio project
+-Downloaded stock price data
+-Generated adjusted price chart
+-Confirmed that the data loads correctly
 
