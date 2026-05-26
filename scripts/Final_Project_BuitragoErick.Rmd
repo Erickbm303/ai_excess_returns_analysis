@@ -1,0 +1,324 @@
+---
+title: "Detection of Excess Returns in AI-Related Stocks"
+author: "Erick Buitrago"
+date: "Spring 2026"
+output:
+  word_document: default
+  pdf_document: default
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+
+library(tidyquant)
+library(dplyr)
+library(ggplot2)
+```
+
+# Abstract
+
+This project examines whether AI-related stocks experienced statistically significant positive excess returns after the release of ChatGPT on November 30, 2022. Daily stock price data for the Magnificent Seven companies and SPY were collected from Yahoo Finance using the `tidyquant` package in R. Adjusted closing prices were used to calculate daily log returns, and excess returns were calculated by subtracting SPY returns from each stock’s return. The analysis focused on a 30-calendar-day window before and after the ChatGPT release. Visualizations, descriptive statistics, paired t-tests, and linear regression models were used to compare pre-event and post-event performance. The results did not provide strong statistical evidence that AI-related stocks had significantly higher excess returns after the ChatGPT release. The paired t-tests were not statistically significant, and the regression models showed that SPY returns were significant predictors, while the post-event indicator was not significant. Overall, the findings suggest that market movement explained stock returns more strongly than the ChatGPT event during this window.
+
+# Introduction
+
+Recent advances in artificial intelligence, especially the release of ChatGPT, have increased investor attention toward major technology firms and the possibility of an “AI bubble.” Companies such as NVIDIA, Microsoft, Meta, Alphabet, Amazon, Apple, and Tesla are often connected to AI growth because of their roles in chips, cloud computing, software, platforms, and consumer technology.
+
+This project examines whether AI-related assets showed statistically significant positive excess returns after the release of ChatGPT on November 30, 2022. In this project, “AI-related asset behavior” refers to changes in daily returns and excess returns before and after the ChatGPT release.
+
+The main research question is:
+
+Do AI-related assets experience significant positive excess returns relative to the market after the release of ChatGPT?
+
+To answer this question, this project will:
+
+- Analyze daily returns and excess returns of major AI-related assets from 2020 to the present.
+- Compare excess returns before and after the ChatGPT release.
+- Evaluate performance relative to SPY.
+- Test whether post-event excess returns are statistically greater than pre-event excess returns.
+
+The hypotheses for the paired t-test are:
+
+$$
+H_0: \mu_d = 0
+$$
+
+$$
+H_1: \mu_d > 0
+$$
+
+where $d = \text{post-event excess return} - \text{pre-event excess return}$.
+
+# Data Collection and Description
+
+Daily stock price data will be collected from Yahoo Finance using the `tidyquant` package in R. The analysis will use adjusted closing prices to calculate daily log returns, market returns, excess returns, and a post-event indicator.
+
+AI-related assets: The Magnificent Seven
+
+| Ticker | Company | AI Category |
+|---|---|---|
+| AAPL | Apple | AI Devices / Consumer Technology |
+| AMZN | Amazon | AI Cloud / E-commerce |
+| GOOGL | Alphabet | AI Search / Cloud |
+| TSLA | Tesla | AI / Autonomous Driving |
+| META | Meta | AI Platforms / Advertising |
+| MSFT | Microsoft | AI Software / Cloud |
+| NVDA | Nvidia | AI Chips / Hardware |
+
+Benchmark:
+
+| Ticker | Description |
+|---|---|
+| SPY | S&P 500 ETF used as the market benchmark |
+
+Key event:
+
+- November 30, 2022: Release of ChatGPT
+
+Relevant variables:
+
+| Variable | Type | Description |
+|---|---|---|
+| Date | Date | Trading day for each stock or benchmark |
+| Symbol | Categorical | Stock ticker, such as NVDA, MSFT, or SPY |
+| Adjusted closing price | Numeric | Closing price adjusted for stock splits and dividends |
+| Daily return | Numeric | Log return calculated from adjusted closing prices |
+| Market return | Numeric | Daily log return of SPY |
+| Excess return | Numeric | Stock return minus SPY return |
+| Post-event indicator | Binary | Equals 1 after the ChatGPT release and 0 before the release |
+
+# Methodology
+
+The analysis will focus on a 30-calendar-day window before and after the ChatGPT release on November 30, 2022. Visualizations will be used to examine stock price trends and excess return patterns. Descriptive statistics such as mean and standard deviation will be compared between pre-event and post-event excess returns.
+
+Excess returns will be calculated as:
+
+$$
+Excess\ Return = Stock\ Return - SPY\ Return
+$$
+
+A paired t-test will be used to test whether average post-event excess returns are greater than average pre-event excess returns:
+
+$$
+H_0: \mu_d = 0
+$$
+
+$$
+H_1: \mu_d > 0
+$$
+
+where $d = \text{post-event excess return} - \text{pre-event excess return}$.
+
+A linear regression model will also be used to control for market returns:
+
+$$
+Stock\ Return = \beta_0 + \beta_1SPY\ Return + \beta_2PostEvent + \epsilon
+$$
+
+In this model, $\beta_2$ measures whether stock returns were higher after the ChatGPT release, controlling for overall market performance.
+
+# Return and Excess Return Calculation
+
+Daily log returns are calculated using adjusted closing prices:
+
+$$
+Daily\ Log\ Return = \log\left(\frac{Adjusted\ Price_t}{Adjusted\ Price_{t-1}}\right)
+$$
+
+Excess returns are calculated as:
+
+$$
+Excess\ Return = Log\ Return - SPY\ Return
+$$
+# Analysis and Results
+
+## Data Visualization
+
+
+
+
+## Descriptive Statistics
+
+In the 30-calendar-day window around the ChatGPT release, the average log return across the selected stocks was negative, around -0.0027, and the average excess return was also slightly negative, around -0.00245. This suggests that, overall, the selected AI-related stocks did not strongly outperform SPY during this event window.
+
+## Paired T-Test
+
+The paired t-test results do not provide statistically significant evidence that AI-related stocks had higher excess returns after the ChatGPT release. Although some stocks had positive average differences between post-event and pre-event excess returns, none of these differences were significant at the 5% level. Therefore, the paired t-tests do not support the alternative hypothesis.
+
+## Linear Regression
+
+The regression model is:
+
+$$
+Stock\ Return = \beta_0 + \beta_1SPY\ Return + \beta_2PostEvent + \epsilon
+$$
+The regression results show that SPY return was statistically significant for all stocks, indicating that overall market movement was an important predictor of each stock’s return. However, the post-event indicator was not statistically significant for any stock. This suggests that after controlling for SPY, the ChatGPT release did not produce a statistically significant increase in stock returns within the 30-calendar-day event window.
+
+## Model Diagnostics
+
+Model diagnostics were checked using NVDA as an example because NVIDIA is one of the most directly AI-related companies in the sample. The diagnostic plots help evaluate whether the regression assumptions are reasonable. The residual histogram and regression diagnostic plots suggest that the model may have some deviations from normality and possible outliers, which is expected in short-window financial return data. This is a limitation of the analysis, but the regression still provides useful evidence about the relationship between NVDA returns, SPY returns, and the post-event period.
+
+# Conclusion
+
+Overall, the results do not provide strong statistical evidence that the ChatGPT release caused significant positive excess returns for the selected AI-related stocks. The paired t-tests found no significant post-event increase in excess returns, and the regression models showed that the post-event indicator was not significant after controlling for SPY. However, SPY return was significant across all models, showing that general market movement was an important driver of stock returns during the event window. Therefore, the hypothesis is not supported by the results in this analysis. A limitation is that the study focuses on one event and a short event window, so future research could compare other AI events such as DeepSeek or Claude Mythos separately.
+
+# References
+
+Business Science. (n.d.). *tidyquant: Tidy quantitative financial analysis*. https://business-science.github.io/tidyquant/
+
+Yahoo Finance. (n.d.). *Historical stock price data*. https://finance.yahoo.com/
+
+OpenAI. (2022, November 30). *Introducing ChatGPT*. https://openai.com/index/chatgpt/
+
+R Core Team. (2026). *R: A language and environment for statistical computing*. R Foundation for Statistical Computing. https://www.R-project.org/
+
+Wickham, H., François, R., Henry, L., Müller, K., & Vaughan, D. (2023). *dplyr: A grammar of data manipulation*. https://dplyr.tidyverse.org/
+
+Wickham, H. (2016). *ggplot2: Elegant graphics for data analysis*. Springer-Verlag New York.
+
+# Appendix
+
+## R Code
+
+
+```{r download-data}
+tickers <- c("AAPL", "AMZN", "GOOGL", "TSLA", "META", "MSFT", "NVDA", "SPY")
+
+prices <- tq_get(
+  tickers,
+  from = "2020-01-01",
+  to = Sys.Date(),
+  get = "stock.prices"
+)
+
+head(prices)
+tail(prices)
+```
+
+```{r return-calculation}
+returns <- prices %>%
+  group_by(symbol) %>%
+  arrange(date) %>%
+  mutate(log_return = log(adjusted / lag(adjusted))) %>%
+  ungroup() %>%
+  na.omit()
+
+head(returns)
+```
+
+```{r excess-return-calculation}
+SPY_returns <- returns %>%
+  filter(symbol == "SPY") %>%
+  select(date, spy_return = log_return)
+
+head(SPY_returns)
+
+excess_returns <- returns %>%
+  filter(symbol != "SPY") %>%
+  left_join(SPY_returns, by = "date") %>%
+  mutate(excess_return = log_return - spy_return)
+
+head(excess_returns)
+```
+
+```{r event-window}
+releaseChatGPT <- as.Date("2022-11-30")
+
+event_window <- excess_returns %>% 
+  filter(date >= releaseChatGPT - 30,
+         date <= releaseChatGPT + 30) %>%
+  mutate(
+    D_t = ifelse(date >= releaseChatGPT, 1, 0),
+    period = ifelse(D_t == 1, "Post-event", "Pre-event")
+  )
+
+event_window %>%
+  select(symbol, date, log_return, spy_return, excess_return, D_t, period) %>%
+  arrange(symbol, date)
+```
+
+```{r price-chart}
+ggplot(prices, aes(x = date, y = adjusted, color = symbol)) +
+  geom_line() +
+  labs(
+    title = "Adjusted Stock Prices from Yahoo Finance",
+    x = "Date",
+    y = "Adjusted Price",
+    color = "Ticker"
+  ) +
+  theme_minimal()
+```
+
+```{r event-excess-return-chart}
+ggplot(event_window, aes(x = date, y = excess_return, color = symbol)) +
+  geom_line() +
+  geom_vline(xintercept = releaseChatGPT, linetype = "dashed") +
+  labs(
+    title = "Excess Returns Around the ChatGPT Release",
+    x = "Date",
+    y = "Excess Return",
+    color = "Ticker"
+  ) +
+  theme_minimal()
+```
+
+```{r descriptive-statistics}
+summary(event_window)
+```
+
+```{r create-stock-windows}
+window_aapl <- event_window %>% filter(symbol == "AAPL")
+window_amzn <- event_window %>% filter(symbol == "AMZN")
+window_googl <- event_window %>% filter(symbol == "GOOGL")
+window_meta  <- event_window %>% filter(symbol == "META")
+window_msft  <- event_window %>% filter(symbol == "MSFT")
+window_nvda  <- event_window %>% filter(symbol == "NVDA")
+window_tsla  <- event_window %>% filter(symbol == "TSLA")
+
+head(window_aapl)
+```
+
+```{r paired-t-test}
+paired_test_stock <- function(stock_window) {
+  before <- stock_window$excess_return[stock_window$D_t == 0]
+  after  <- stock_window$excess_return[stock_window$D_t == 1]
+  
+  n <- min(length(before), length(after))
+  
+  t.test(after[1:n], before[1:n],
+         paired = TRUE,
+         alternative = "greater")
+}
+
+paired_test_stock(window_aapl)
+paired_test_stock(window_amzn)
+paired_test_stock(window_googl)
+paired_test_stock(window_meta)
+paired_test_stock(window_msft)
+paired_test_stock(window_nvda)
+paired_test_stock(window_tsla)
+```
+
+```{r regression-models}
+model_aapl <- lm(log_return ~ spy_return + D_t, data = window_aapl)
+model_amzn <- lm(log_return ~ spy_return + D_t, data = window_amzn)
+model_googl <- lm(log_return ~ spy_return + D_t, data = window_googl)
+model_meta <- lm(log_return ~ spy_return + D_t, data = window_meta)
+model_msft <- lm(log_return ~ spy_return + D_t, data = window_msft)
+model_nvda <- lm(log_return ~ spy_return + D_t, data = window_nvda)
+model_tsla <- lm(log_return ~ spy_return + D_t, data = window_tsla)
+
+summary(model_aapl); summary(model_amzn); summary(model_googl); summary(model_meta); summary(model_msft); summary(model_nvda); summary(model_tsla)
+```
+
+```{r model-diagnostics}
+plot(model_nvda)
+```
+
+```{r residual-histogram}
+hist(residuals(model_nvda),
+     main = "Histogram of NVDA Model Residuals",
+     xlab = "Residuals")
+```
+
+```{r shapiro-test-nvda}
+shapiro.test(residuals(model_nvda))
+```
